@@ -1,0 +1,157 @@
+{% load humanize %}
+<html>
+    <head>
+        <title>
+            Excel file upload and processing : Django Example : ThePythonDjango.Com
+        </title>
+    </head>
+    <body style="margin-top: 30px;margin-left: 30px;">
+    {% for m in messages %}
+    <h1>{{ m }}</h1>
+    {% endfor %}
+        <form id="form_id" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" id="file_data" title="Upload excel file" name="excel_file" style="border: 1px solid black; padding: 5px;" required="required">
+            <p>
+                <button type="submit" class="subit_btn" style="border: 1px solid green; padding:5px; border-radius: 2px; cursor: pointer;">Upload</button>
+        </form>
+
+        <p></p>
+        <hr>
+    <form action="{% url 'Search' %}" method="get">
+        <div>
+    <label>
+        <input type="search" name="search" placeholder="Search Name Or IFSC Cde" style="width: 300px;height: 30px">
+    </label>
+    <button type="button">Search</button>
+    </div>
+    </form>
+
+    {% if Searched_Data %}
+    <table align="center" style="word-break: break-all">
+    <tr>
+        <th>
+            Result: {{ Searched_input }}
+        </th>
+    </tr>
+        <tr>
+            <th>Bank Name</th>
+            <th>BRANCH</th>
+            <th>IFSC</th>
+            <th>MICR</th>
+            <th>ADDRESS</th>
+            <th>CITY1</th>
+            <th>CITY2</th>
+            <th>STATE</th>
+            <th>STD</th>
+            <th>Phone</th>
+            <th>Time</th>
+        </tr>
+            {% for d in Searched_Data %}
+
+        <tr>
+            <th>{{ d.BANK }}</th>
+            <th>{{ d.BRANCH }}</th>
+            <th>{{ d.IFSC }}</th>
+            <th>{{ d.MICR }}</th>
+            <th>{{ d.ADDRESS }}</th>
+            <th>{{ d.CITY1 }}</th>
+            <th>{{ d.CITY2 }}</th>
+            <th>{{ d.STATE }}</th>
+            <th>{{ d.STD }}</th>
+            <th>{{ d.PHONE }}</th>
+            <th>{{ d.DateTime|naturaltime }}</th>
+        </tr>
+            {% endfor %}
+</table>
+        <hr>
+        <br>
+        {% else %}
+        No Results Found Result: {{ Searched_input }}
+        <hr>
+        <br>
+    {% endif %}
+
+
+    <table align="center" style="word-break: break-all">
+        <tr>
+            <th>Bank Name</th>
+            <th>BRANCH</th>
+            <th>IFSC</th>
+            <th>MICR</th>
+            <th>ADDRESS</th>
+            <th>CITY1</th>
+            <th>CITY2</th>
+            <th>STATE</th>
+            <th>STD</th>
+            <th>Phone</th>
+            <th>Time</th>
+        </tr>
+            {% for d in Data %}
+
+        <tr>
+            <th>{{ d.BANK }}</th>
+            <th>{{ d.BRANCH }}</th>
+            <th>{{ d.IFSC }}</th>
+            <th>{{ d.MICR }}</th>
+            <th>{{ d.ADDRESS }}</th>
+            <th>{{ d.CITY1 }}</th>
+            <th>{{ d.CITY2 }}</th>
+            <th>{{ d.STATE }}</th>
+            <th>{{ d.STD }}</th>
+            <th>{{ d.PHONE }}</th>
+            <th>{{ d.DateTime|naturaltime }}</th>
+        </tr>
+            {% endfor %}
+</table>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+    <script>
+        var token = '{{csrf_token}}';
+    $(function(){
+    $("#form_id").submit(function(){
+    var data = new FormData($('#form_id').get(0));
+                $.ajax({
+                    headers: { "X-CSRFToken": token },
+                    type:"POST",
+                    url: "/Ajax_FileUpload/",
+                    data : data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(data){
+                        alert('success');
+                    },
+                    failure: function(){
+                        $(this).addClass("error");
+                    }
+                });
+                return false;
+    });
+    });
+</script>
+{#    <script type="text/javascript">#}
+{#    $('.subit_btn').click(function(){#}
+{#    $.ajax(#}
+{#    {#}
+{#        type:"GET",#}
+{#        url: "/Ajax_FileUpload/",#}
+{#        data:{#}
+{#                 excel_file: $('#file_data').val()#}
+{#        },#}
+{#        success: function( responce )#}
+{#            {#}
+{#              if (responce.successs){#}
+{#              alert(responce.successs);#}
+{#              }#}
+{#              else {#}
+{#                  alert(responce.errorss);#}
+{#              }#}
+{##}
+{#            }#}
+{#     })#}
+{#});#}
+{#        </script>#}
+
+    </body>
+</html>
